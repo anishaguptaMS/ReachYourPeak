@@ -1,0 +1,36 @@
+	<div class="col-xs-12">        
+        <h2>Menu</h2>
+        <ul  class="list-group">
+        
+            <li class="list-group-item"><a href="javascript:loadPage('myTeam.html', {'requiresSession' : true})">My team</a></li>
+            <li class="list-group-item"><a href="javascript:loadPage('enterSteps.html', {'requiresSession' : true})">Enter steps</a></li>
+            <li class="list-group-item"><a href="javascript:loadPage('allTeamStats.html', {'requiresSession' : true})">All teams</a></li>
+            <li class="list-group-item"><a href="javascript:loadPage('changePwd.html', {'requiresSession' : true})">Change your password</a></li>
+            <li class="list-group-item"><a href="javascript:logout()">Log out</a></li>
+        </ul>
+        <ul class="list-group" id="adminMenuLink" style="display:none">
+            <li class="list-group-item"><a href="javascript:loadPage('menuAdmin.html', {'requiresSession' : true})">Admin</a></li>
+        </ul>            
+    </div>
+    
+    
+<script>
+
+$(document).ready(function() {
+    requiresSession();
+
+    $.ajax({
+        'url' : 'db/isAdmin.php',
+        'dataType' : 'json',
+        'type' : 'GET'
+    }).success(function(json) {
+       if(json.result== 'OK')  {
+            if(json.data.isAdmin) {
+                $('#adminMenuLink').css('display', 'block');
+            }
+       }
+    });
+});
+
+
+</script>

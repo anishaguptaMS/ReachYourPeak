@@ -1,0 +1,79 @@
+
+   <div class="col-xs-12">
+        <h3>Locations</h3>
+        
+        
+        <div class="form-group">
+			<label for="locationInput">Enter a new location:</label>
+			<input type="text" class="form-control" model="loc" name="name" id="locationInput" placeholder="Location label" maxlength="50">
+		</div>
+        
+        <div class="modal-footer">
+			<button type="button" class="btn btn-primary" onclick="addLocation()">Add</button>
+        </div>
+        
+        
+        <div class="DataTables">
+            <table id="locationTableId" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                   <tr><th>ID</th><th>Name</th><th></th>
+                </thead>
+                <tbody>
+                </tbody>
+             </table>
+        </div>
+        <button class="btn btn-secondary" onclick="loadPage('menuAdmin.html', {requiresSession: true })"> Back to menu </button>
+   </div>
+   
+   
+<script>
+
+var locationTable;
+
+function addLocation() {
+    var data = getInputValues('loc');
+    if(! data.name) {
+        errorMSG("Location name is required");  
+        return false;
+    }
+    $.ajax({
+        'url' : 'db/addLocation.php',
+        'data' : data,
+        'dataType' : 'json',
+        'type' : 'POST'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            message(json.message);
+            locationTable.ajax.reload();
+        } else {
+            errorMSG(json.error);
+        }
+    });
+}
+
+
+function loadLocations() {
+    locationTable = $('#locationTableId').DataTable({
+        'dom' : 'Bfrtip',
+		'buttons' : [ 'excel' ],
+        "ajax" : 'db/allLocations.php',
+        "columns"  : [
+            { 'data' : 'ID' },
+            { 'data' : 'name' },
+            {
+				'data' : null,
+				'orderable' : false,
+				'render' : function(data, type, row) { 
+					return renderEditButton({ 'page' :'admin/editLocation.html', 'id' : row['ID'] }); 
+				}
+			}
+        ]
+    }); 
+}
+
+$(document).ready(function() {
+    requiresSession();
+    loadLocations();
+});
+
+</script>   

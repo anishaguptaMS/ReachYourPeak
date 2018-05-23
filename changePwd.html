@@ -1,0 +1,79 @@
+	<div class="col-xs-12">        
+        <h4 class="title">Change your password (between 8-20 characters)</h4>
+      </div>
+      <div class="body">
+		<form>
+            <input type="hidden"  model="resetPwd" name="link" id="pwdLnk" maxlength="50">
+            <div class="form-group">
+				<label for="oldpwdInput">Old password:</label>
+				<input type="password" class="form-control" model="resetPwd" name="oldPassword" id="oldpwdInput" placeholder="Old password">
+			</div>
+            
+			<div class="form-group">
+				<label for="pwdInput">Enter your new password:</label>
+				<input type="password" class="form-control" model="resetPwd" name="password" id="pwdInput" placeholder="Password">
+			</div>
+			<div class="form-group">
+				<label for="nameInput">Re-enter your password:</label>
+				<input type="password" class="form-control" model="resetPwd"  name="password2" autocomplete="off"  id="pwd2Input" placeholder="Password (again)">
+			</div>
+            <div class="form-group">
+                <input type="checkbox" id="viewInput" onchange="viewPwd()">
+                <label for="viewInput">View password</label>
+            </div>
+      </div>
+      <div class="modal-footer">
+			<button type="button" class="btn btn-primary" onclick="changePassword()">Reset</button>
+      </div>
+      <div >          
+        <button class="btn btn-secondary" onclick="loadPage('menu.html', {requiresSession: true })"> Back to menu </button>
+       </div>
+	  </form>        
+    </div>
+
+<script>
+
+function viewPwd() {
+    if($('#viewInput').is(':checked')) {
+        $('#oldpwdInput').attr('type', 'text');
+        $('#pwdInput').attr('type', 'text');
+        $('#pwd2Input').attr('type', 'text');
+    } else {
+        $('#oldpwdInput').attr('type', 'password');    
+        $('#pwdInput').attr('type', 'password');
+        $('#pwd2Input').attr('type', 'password');
+    }
+}
+
+
+function changePassword() {
+    var data = getInputValues('resetPwd');
+    if(data['password'].length < 8 || data['password'].length > 20)  {
+        errorMSG('The password needs to be between 8 and 20 characters long');
+        return false;
+    }
+    if(data['password'] == data['password2']) {
+        $.ajax({
+            'url' : 'db/changePwd.php',
+            'data' : data,
+            'dataType' : 'json',
+            'type' : 'POST',
+        }).success(function(json) {
+            if(json.result == 'OK') {
+                message(json.message);
+                loadPage('menu.html');
+            } else {
+                errorMSG(json.error);
+            }
+        })    
+    } else {
+        errorMSG("The passwords do not match!")
+    }
+}
+
+$(document).ready(function() {
+    requiresSession();
+});
+
+
+</script>

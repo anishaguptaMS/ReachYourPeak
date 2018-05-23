@@ -1,0 +1,47 @@
+   <div class="col-xs-12">
+        <h3>All teams</h3>
+
+        
+         <div class="DataTables">
+            <table id="allTeams" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Cycle</th><th>Location</th><th>Team</th><th>Captain</th><th>E-mail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                </tbody>
+             </table>
+        </div>
+        <button class="btn btn-secondary" onclick="loadPage('menu.html', {requiresSession: true })"> Back to menu </button>
+   </div>
+   
+   
+<script>
+
+var userTable;
+
+
+
+function loadAllTeams() {
+
+    userTable = $('#allTeams').DataTable({
+        'dom' : 'frti',
+        "ajax" : 'db/allTeamStats.php',
+        "columns"  : [
+            { 'data' : 'cycle' },
+            { 'data' : 'location' },
+            { 'data' : 'team_name' },
+            { 'data' : "name"},
+            { 'data' : 'email' }
+        ]
+    }); 
+}
+
+$(document).ready(function() {
+    requiresSession();
+    loadAllTeams();
+});
+
+</script>   

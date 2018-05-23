@@ -1,0 +1,159 @@
+<style>
+
+.stepTableClass {
+    margin-top:20px;
+    margin-bottom: 20px;
+    font-size:12pt;
+}
+
+.stepTableClass td {
+    width: 100px;
+}
+
+</style>    
+    
+    <div class="col-xs-12">
+        <h3>Your steps</h3>
+        
+        <h4>Cycle: <span id="cycleName"></span><h4>
+        
+        <h4><span id="start_date"></span> -  <span id="end_date"></span><h4>
+        <hr>
+        <div>
+            <h4>Week</h4>
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div id="weeks" class="btn-group mr-2" role="group" aria-label="First group">
+                </div>
+            </div>
+            
+            <div>
+                <input type="hidden" name="date0" model="steps" id="date0">
+                <input type="hidden" name="date1" model="steps" id="date1">
+                <input type="hidden" name="date2" model="steps" id="date2">
+                <input type="hidden" name="date3" model="steps" id="date3">
+                <input type="hidden" name="date4" model="steps" id="date4">
+                <input type="hidden" name="date5" model="steps" id="date5">
+                <input type="hidden" name="date6" model="steps" id="date6">
+            
+                <table id="dateStepTable" class="stepTableClass">
+                    <tbody>
+                    
+                    </tbody>
+                
+                </table>
+                
+                <button class="btn btn-primary" onclick="saveSteps()"> Save </button>
+            
+            </div>
+
+            
+            
+            <hr>
+        </div>
+    
+         <div>
+            <button class="btn btn-secondary" onclick="loadPage('menu.html', {requiresSession: true })"> Back to menu </button>
+         </div>
+    </div>
+    
+<script>
+
+var cycle = {};
+var steps;
+var stepsLoaded = false;
+
+function getWeeks(d) {
+    $.ajax({
+        'url' : 'db/getWeeks.php',
+        'data' : d,
+        'type' : 'GET',
+        'dataType' : 'json'
+    }).success(function(json) {
+         if(json.result == 'OK') {
+            cycle = json.data;
+            $('#cycleName').text(cycle['name']);
+            $('#start_date').text(cycle['start_date']);
+            $('#end_date').text(cycle['end_date']);
+            cycle['sd'] =  getDateMySQL(cycle['start_date']);
+            cycle['ed'] =  getDateMySQL(cycle['end_date']);
+            cycle['daysSinceStart'] = Math.floor((new Date() - cycle['sd'])/msInDay);
+            cycle['nrWeeks'] = Math.floor(cycle['daysSinceStart'] / 7) + 1;
+            populateWeeks();
+            getSteps();
+         }
+    });
+
+}
+
+function populateWeeks(d) {
+    var nrWeeks = cycle['nrWeeks'];
+    for(var i=0; i<nrWeeks; i++) {
+        $('#weeks').append('<button class="btn btn-primary" onclick="drawStepTable(' + i + ')">' + (i + 1) + '</button>'); 
+    }
+}
+
+function drawStepTable(i) {
+    if(! stepsLoaded) {
+        setTimeout(function() {
+            drawStepTable(i)
+        }, 50);
+        return false;
+    }
+    var startDate = addDays(cycle['sd'], i * 7);
+    $('#dateStepTable').find('tbody').empty();
+    for(var i=0; i<7; i++) {
+        var newDate = addDays(startDate, i);
+        if(newDate < new Date()) {
+            alert(getDateStr(newDate));
+            $('#date' + i).val(getDateStr(newDate));
+            $('#dateStepTable').append('<tr><td>' + getDayOfWeek(newDate) + ' - ' + getDateStr(newDate) + '</td><td><input type=number model="steps" name="steps'+i+'" id="steps' + i + '"></td></tr>');
+        }
+    }
+    
+    for(var i=0; i<7; i++) {
+        var d = $('#date' + i).val();
+        for(var j=0; j<steps.length; j++) {
+            if(getDateStr(new Date(steps[j]['step_date'])) == d) {
+                $('#steps' + i).val(steps[j]['steps']);
+            }
+        }
+    }
+}
+
+function getSteps() {
+    stepsLoaded = false;
+    $.ajax({
+        'url' : 'db/getSteps.php',
+        'data' : { 'sd' : cycle['start_date'] },
+        'type' : 'GET',
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            steps = json.data;
+            stepsLoaded = true;
+
+        }
+    });
+}
+
+function saveSteps() {
+    var data = getInputValues('steps');
+    $.ajax({
+        'url' : 'db/saveSteps.php',
+        'data' : data,
+        'type' : 'POST',
+        'dataType' : 'json'
+    }).success(function(json) {
+        getSteps();
+    });
+}
+
+$(document).ready(function() {
+    requiresSession();
+    getWeeks({});
+});
+
+
+</script>
+
+    

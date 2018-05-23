@@ -1,0 +1,124 @@
+
+   <div class="col-xs-12">
+        <h3>Admins</h3>
+        
+        <div>
+            Add admin:
+   			<div class="form-group">
+				<label for="searchInput">Search:</label>
+				<input type="text" class="form-control" model="search" name="search" id="searchInput" placeholder="Search for name, email or ID">
+                <button class="btn btn-secondary" onclick="searchMe()"><i class="fa fa-search"></i> </button>
+			</div>
+            <div id="userSearchResults">
+            
+            </div>
+                    
+            <hr>
+        </div>
+
+        
+        </div>
+        
+        
+
+
+        
+        <div class="DataTables">
+            <table id="adminTableId" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr><th>ID</th><th>Name</th><th>Email</th><th>Active</th><th></th>
+                </thead>
+                <tbody>
+                </tbody>
+		
+             </table>
+             
+        </div>
+        
+        <br>
+        <br>
+        
+        <button class="btn btn-secondary" onclick="loadPage('menuAdmin.html', {requiresSession: true })"> Back to menu </button>
+   </div>
+   
+   
+<script>
+
+var adminTable;
+
+function searchMe() {
+    var data = getInputValues('search');    
+    userSearchWidget({ 'search' : data['search'], 'div' : 'userSearchResults', 'callback' : 'addAdmin'});
+}
+
+function loadAdmins() {
+    adminTable = $('#adminTableId').DataTable( {
+        'dom' : 'Bfrtip',
+		'buttons' : [ 'excel' ],   
+        "ajax" : 'db/allAdmins.php',
+        "columns"  : [
+            {  'data' : 'id'  },
+            {  'data' : 'name'  },
+            {  'data' : 'email',
+                'render' : function(data, type, row) { 
+                    return '<a href="mailto:' + row['email'] + '">'+ row['email'] + '</a>';
+                }
+            },
+            {  'data' : 'active_flag'  },
+            {
+				'data' : null,
+				'orderable' : false,
+				'render' : function(data, type, row) { 
+					return '<button onclick="removeAdmin(' + row['rm_id'] + ')")><i class="fa fa-trash-alt" title="Remove admin role"></i></button>'; 
+				}
+			}
+            
+        ]
+    });
+}
+
+function addAdmin(id) {
+    $.ajax({
+        'url' : 'db/addAdmin.php',
+        'data' : { 'id' : id },
+        'type' : 'POST', 
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            message(json.message);
+            loadPage('admin/admins.html');            
+        } else {
+            errorMSG(json.error);
+        }
+    });
+}
+
+function removeAdmin(id) {
+    if(confirm('Are you sure you want to revoke admin access?')) {
+        $.ajax({
+            'url' : 'db/removeAdminAccess.php',
+            'dataType' : 'json',
+            'type' : 'POST',
+            'data' :  { 'id' : id}
+        }).success(function(json) {
+            if(json.result == 'OK') {
+                message(json.message);
+                loadPage('admin/admins.html');
+            }
+        });
+    }
+}
+
+$(document).ready(function() {
+    requiresSession();
+    loadAdmins();
+    $('#searchInput').keypress(function(event) {
+        if(event.which == 13) {
+            searchMe();
+            event.preventDefault();
+        }
+    });
+    
+});
+
+</script>   

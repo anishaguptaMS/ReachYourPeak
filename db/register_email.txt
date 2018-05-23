@@ -1,0 +1,12 @@
+Dear {name},
+
+Verify your email here.
+
+{link}
+
+Thanks
+
+Reach your peak.
+
+(Do not reply to this email)
+

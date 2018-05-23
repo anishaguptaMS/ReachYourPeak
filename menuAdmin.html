@@ -1,0 +1,27 @@
+    <div class="col-xs-12">        
+        <h2>Admin Menu</h2>
+        <ul class="list-group">
+        
+            <li  class="list-group-item"><a href="javascript:loadPage('admin/users.html', { 'requiresSession' : true  })">Users</a></li>
+            <li  class="list-group-item"><a href="javascript:loadPage('admin/teams.html', { 'requiresSession' : true  })">Teams</a></li>
+            <li  class="list-group-item"><a href="javascript:loadPage('admin/allTeamMembers.html', { 'requiresSession' : true  })">All team members</a></li>
+            <li  class="list-group-item"><a href="javascript:loadPage('admin/locations.html', { 'requiresSession' : true  })">Locations</a></li>
+            <li  class="list-group-item"><a href="javascript:loadPage('admin/cycles.html', { 'requiresSession' : true  })">Cycles</a></li>
+            <li  class="list-group-item"><a href="javascript:loadPage('admin/admins.html', { 'requiresSession' : true  })">Admins</a></li>
+            <li  class="list-group-item"><a href="javascript:loadPage('')">Progress</a></li>
+            <li  class="list-group-item"><a href="javascript:loadPage('admin/notify.html')">Notify</a></li>
+            <li  class="list-group-item"><a href="javascript:logout()">Log out</a></li>
+        </ul>
+        <ul class="list-group">
+            <li  class="list-group-item"><a href="javascript:loadPage('menu.html')">My Menu</a></li>
+        </ul>            
+    </div>
+    
+    
+<script>
+
+$(document).ready(function() {
+    requiresSession();
+});
+
+</script>    

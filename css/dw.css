@@ -1,0 +1,66 @@
+.projectBox {
+	min-height: 200px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 2px;
+	margin-bottom: 7px;
+	border: 2px solid #00AEEF;
+	background-color: #D0EEFF;
+}
+
+.siteBox {
+	min-height: 200px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 2px;
+	margin-bottom: 7px;
+	border: 2px solid #D80B8C;
+	background-color: #F8CBEC;
+}
+
+.workbookBox {
+	min-height: 200px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 2px;
+	margin-bottom: 7px;
+	border: 2px solid #221F72;
+	background-color: #D2CFE2;
+}
+
+
+.siteBox h4 {
+	text-align: center;	
+}
+
+
+.projectBox h4 {
+	text-align: center;	
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+.description {
+	color: #a0a0a0; 
+}
+
+#logo {
+	width:  74px;
+	height: 27px;
+}
+
+.navbar-toggle {
+	color: #00aeef;
+	border: 1px solid #00aeef;
+}
+
+#spanNameId {
+	font-size: 14pt;
+	font-weight: bold;
+}
+
+.error.modal-title {
+	color : #a00000;
+}

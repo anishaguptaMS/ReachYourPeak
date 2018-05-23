@@ -1,0 +1,66 @@
+	<div class="col-xs-12">        
+        <h4 class="title">Login</h4>
+      </div>
+      <div class="body">
+		<form>
+			<div class="form-group">
+				<label for="emailInput">Email address:</label>
+				<input type="email" class="form-control" model="login" name="email" id="emailInput" placeholder="Email">
+			</div>
+			<div class="form-group">
+				<label for="passwordInput">Password:</label>
+				<input type="password" class="form-control" model="login"  name="password" autocomplete="off"  id="passwordInput" placeholder="Secret password">
+			</div>
+            <div class="form-group">
+                <input type="checkbox" name="sessionType" model="login" value="Permanent" id="keepLoggedIn">
+                <label for="keepLoggedIn">Keep me  logged in</label>
+           
+            
+            </div>
+      </div>
+      <div class="modal-footer">
+			<button type="button" class="btn btn-primary" onclick="loginSubmit()">Login</button>
+      </div>
+	  </form>        
+      
+      <div class="form-group">
+           <input type="checkbox" id="viewInput" onchange="viewPwd()">
+           <label for="viewInput">View password</label>
+           </form>
+         <hr>
+      </div>
+
+      
+      <div>
+        <button class="btn btn-secondary" onclick="loadPage('sendPasswordLink.html')">Forgot your password</button>
+      </div>
+      <div style="min-height: 20px;">
+         
+      </div>
+      <div>
+        <button class="btn btn-secondary" onclick="loadPage('register.html')">Click here to register as a new user</button>
+      </div>
+      
+    </div>
+
+    <script>
+    
+    
+function viewPwd() {
+    if($('#viewInput').is(':checked')) {
+        $('#passwordInput').attr('type', 'text');
+    } else {
+        $('#passwordInput').attr('type', 'password');
+    }
+}
+
+$(document).ready(function() {
+     $('#passwordInput').keypress(function(event) {
+        if(event.which == 13) {
+            loginSubmit();
+            event.preventDefault();
+        }
+    });
+});
+
+    </script>

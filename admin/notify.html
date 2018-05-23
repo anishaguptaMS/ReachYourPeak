@@ -1,0 +1,68 @@
+<div class="col-xs-12">
+    <h3>Notify users</h3>
+    <div class="form-group">
+        <label for="mailListInput">Select mailing list:</label>
+        <select model="email" name="mailing_list" class="form-control" id="mailListInput">
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="subjectInput">Subject:</label>
+        <input type="text" name="subject" model="email" class="form-control"  id="subjectInput">
+        
+    </div>    
+    
+    <div class="form-group">
+        <label for="bodyInput">Email text</label>
+        <textarea name="body" class="form-control" model="email" id="bodyInput" rows="7"></textarea>
+        
+    </div>    
+    
+    <div class="modal-footer">
+        <button class="btn btn-primary" onclick="sendEmail()">Send email</button>
+    </div>                
+    
+    
+    <div>
+        <hr>
+        <button class="btn btn-secondary" onclick="loadPage('menuAdmin.html', {requiresSession: true })"> Back to menu </button>
+    </div>
+</div>
+
+
+<script>
+
+function sendEmail() {
+    var data = getInputValues('email');
+    $.ajax({
+        'url' : 'db/sendEmailToList.php',
+        'data' : data,
+        'type' : 'POST',
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            message(json.message);
+        }
+    });
+}
+
+function getMailingLists() {
+    $.ajax({
+        'url' : 'db/getMailingList.php',
+        'type' : 'GET',
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            for(var i=0; i<json.data.length; i++) {
+                var rec = json.data[i];
+                $('#mailListInput').append('<option value="' + rec['ID'] + '">'+ rec['name'] + '</option>');
+            }
+        }
+    });
+}
+
+$(document).ready(function() {
+    requiresSession();
+    getMailingLists();
+})
+
+</script>

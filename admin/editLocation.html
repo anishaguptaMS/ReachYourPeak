@@ -1,0 +1,56 @@
+    <div class="col-xs-12">
+        <h3>Edit location</h3>
+        
+        <div>
+
+   			<div class="form-group">
+                <input type="hidden" model="location" name="id" id="locationId">
+				<label for="locationInput">Search:</label>
+				<input type="text" class="form-control" model="location" name="name" id="locationInput" placeholder="Location name">
+			</div>
+        
+        </div>
+        
+        <div class="modal-footer">
+			<button type="button" class="btn btn-primary" onclick="updateLocation()">Update</button>
+        </div>
+        
+        <div>
+             <button class="btn btn-secondary" onclick="loadPage('menuAdmin.html', {requiresSession: true })"> Back to menu </button>
+        </div>
+    </div>    
+    
+    
+<script>
+
+function updateLocation() {
+    var data = getInputValues('location');
+    $.ajax({
+        'url' : 'db/updateLocation.php',
+        'data' : data,
+        'type' : 'POST',
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            message(json.message);
+            loadPage('admin/locations.html', { 'requiresSession' : true });
+        }
+    }); 
+} 
+
+$(document).ready(function() {
+    requiresSession();
+    $('#locationId').val(getCurrentPageData()['id']); 
+    $.ajax({
+        'url' : 'db/getById.php',
+        'data' : { 'table' : 'locations', 'id' : $('#locationId').val() },
+        'type' : 'GET',
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            setInputValues('location', json.data);
+        }
+    })
+});
+
+</script>    

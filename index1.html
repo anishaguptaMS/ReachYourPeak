@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<header>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<script
+  src="https://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+  crossorigin="anonymous"></script>
+  
+<script type="text/javascript" charset="utf-8" src="/DataTables/datatables.min.js"></script>  
+ <link rel="stylesheet" href="/DataTables/datatables.min.css"> 
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> 
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> 
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+
+<script type="text/javascript" charset="utf-8" src="js/dwAdmin.js?2"></script>
+<link rel="stylesheet" type="text/css" href="css/dw.css?2"> 
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<style>
+.jumbotron {
+	padding-left:30px;
+	height: 50px;
+	padding-top:10px;
+	text-size: 16pt;
+	background-color: #00aeef;
+	color: #e0e0e0;
+}
+
+.jumbotron {
+	color: white;
+    font-size:14pt;
+}
+
+th { font-size: 10px; }
+td { font-size: 10px; }
+
+.container-fluid {
+    max-width: 800px;
+}
+
+.myButton {
+    background-color: red;
+}
+
+.DataTables {
+    font-size: 10pt;
+}
+
+@media only screen and (max-width: 480px) {
+    .jumbotron {
+        color: white;
+        font-size:10pt;
+    }
+}
+
+#mainContainer {
+    
+}
+
+#main {
+    top: 0px;
+    left:0px
+    width:100%;
+}
+
+#help {
+    top: 0px;
+    left:0px;
+    width:100%;
+    display:none;
+}
+
+
+.nav-container {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.navbar {
+    width: 100%;
+    
+}
+
+
+  
+</style>
+
+</header>
+<body>
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+		<input type="hidden" id="currentModel">
+		<input type="hidden" id="currentID">
+        <button type="button" class="close" data-dismiss="modal" id="closeModalIcon">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+		<button type="button" class="btn btn-primary" data-dismiss="modal" id="modalSaveButton" onclick="saveModalModel()">
+		 <i class="fa fa-check"></i> Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+		 <i class="fa fa-times"></i> Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<nav class="navbar navbar-light bg-faded navbar-static-top" role="navigation">
+	<a class="navbar-brand" href="http://www.mountsinai.org"><img src="/img/logo-color.png" id="logo" title="Mount Sinai"></a>
+    <div class="container nav-container">
+        <ul class="navbar-nav mr-auto" style="list-style:none">
+            <li class="nav-item navbar-text"><i class="fa fa-question-circle clickable" onclick="helpFlip()"></i></li>
+          <li class="nav-item navbar-text"><i class="fa fa-list-alt clickable" onclick="loadMenu()"></i></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="jumbotron">Reach Your Peak <i class="fa fa-copyright"></i> 2018 --- <span id="users_name">Not logged in</span>
+</div>
+
+<div class="container-fluid" id="mainContainer">
+    <div class="front" id="main">
+        Checking session ....
+    </div>
+    <div class="back" id="help">
+        <h3>Help</h3>
+    </div>
+</div>
+
+
+</body>
+
+<script>
+
+var isFlipped = false;
+
+function helpFlip() {
+    isFlipped = ! isFlipped;
+    if(isFlipped) {
+        $('#main').hide();
+        $('#help').show();
+    } else {
+        $('#main').show();
+        $('#help').hide();     
+    }
+}
+
+
+function checkSessionCallback(hasSession) {
+    if(hasSession) {
+        loadPage('menu.html');
+    } else {
+        loadPage('login.html');
+    }
+}
+
+$(document).ready(function() {
+    if(document.location.href.indexOf('http://') >= 0) {
+        var s = document.location.href.replace('http://', 'https://');
+        document.location.href = s;
+    }
+	convertLinks();
+	checkSession(checkSessionCallback);
+});
+
+function loadMenu() {
+    if(getCookie('sessionKey')) {
+        loadPage("menu.html");
+    } else {
+        loadPage("login.html");
+    }
+}
+
+</script>
+
+</html>

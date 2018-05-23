@@ -1,0 +1,105 @@
+   <div class="col-xs-12">
+        <h3>Edit user:</h3>
+        
+        <h4 id="userName"></h4>
+        <div class="form-group">
+            <input type="hidden" name="id" model="user" id="userId">
+			<label for="nameInput">Name:</label>
+			<input type="name" class="form-control" model="user" name="name" id="nameInput" placeholder="Name">
+		</div>
+        <div class="form-group">
+			<label for="emailInput">Email address:</label>
+			<input type="email" class="form-control" model="user" name="email" id="emailInput" placeholder="Email">
+		</div>
+        <div class="form-group">
+			<label for="activeInput">Active:</label>
+            <select name="active_flag" model="user" class="form-control" id="activeInput">
+                <option value="A">Active</option>
+                <option value="H">Hidden</option>
+            </select>
+		</div>
+        <div class="form-group">
+			<label for="verifiedInput">Verified:</label>
+            <select name="verified_flag" model="user" class="form-control" id="verifiedInput">
+                <option value="Y">Yes</option>
+                <option value="N">No</option>
+            </select>
+		</div>
+        
+        <div class="form-group">
+			<label for="locationSelect">Location:</label>
+            <select name="location_id" model="user" class="form-control" id="locationSelect">
+            </select>
+		</div>
+
+        <div class="modal-footer">
+			<button type="button" class="btn btn-primary" onclick="saveUser()">Save</button>
+        </div>
+   
+        
+        <div>
+            <button class="btn btn-secondary" onclick="loadPage('menuAdmin.html', {requiresSession: true })"> Back to menu </button>
+        </div>
+   </div>
+   
+   
+<script>
+
+var locationsLoaded;
+
+function myLocations(json) {
+    $('#locationSelect').empty();
+    for(var i=0; i<json.length; i++) {
+        $('#locationSelect').append('<option value="' + json[i]['ID'] + '">'+ json[i]['name'] +'</option>');
+    }
+    locationsLoaded = true;    
+}
+
+function getUser(id) {
+    if(! locationsLoaded) {
+        setTimeout(function () { getUser(id) }, 1000); 
+        return false;
+    }
+    $.ajax({
+        'url' : 'db/getById.php',
+        'data' : { 'table' : 'users', 'id' : getCurrentPageData()['id'] },
+        'dataType' : 'json',
+        'type' : 'GET'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            $('#userName').text(json.data['name']);
+            setInputValues('user', json.data);
+        }
+    });
+}
+
+function saveUser() {
+    var data = getInputValues('user');
+    $.ajax({
+        'url' : 'db/saveUser.php',
+        'data' : data,
+        'dataType' : 'json',
+        'type' : 'POST'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            message(json.message);
+            loadPage('admin/users.html');
+        } else {
+            errorMSG(json.error);
+        }
+        
+    });
+}
+
+
+
+$(document).ready(function() {
+    requiresSession();
+    getLocations(myLocations);
+    if(getCurrentPageData()['id']) {
+        $('#userId').val(getCurrentPageData()['id']);
+        getUser();
+    }
+});
+
+</script>   

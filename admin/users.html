@@ -1,0 +1,79 @@
+
+   <div class="col-xs-12">
+        <h3>Users</h3>
+        
+        <div>
+            <button class="btn btn-primary" onclick="loadPage('admin/editUser.html', {requiresSession: true })"> New user </button>
+        </div>
+        
+        <div class="DataTables">
+            <table id="userTableId" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Name</th><th>E-mail</th><th>Verified</th><th>Last accessed</th><th>PWD Reset</th><th>Active</th><th></th><th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                </tbody>
+             </table>
+        </div>
+        <button class="btn btn-secondary" onclick="loadPage('menuAdmin.html', {requiresSession: true })"> Back to menu </button>
+        
+        <p>Note:  Removing a user is a dangerous thing.  It would remove any reference to old data.  If it needs to occur clean it up using phpmyadmin.</p>
+   </div>
+   
+   
+<script>
+
+var userTable;
+
+function editUser(id) {
+    loadPage('admin/editUser.html', { 'requiresSession' : true, 'id' : id });
+}
+
+function resetPassword(id) {
+    loadPage('resetPassword.html', {'requiresSession' : true });
+}
+
+
+function loadUsers() {
+
+    userTable = $('#userTableId').DataTable({
+        'dom' : 'Bfrtip',
+		'buttons' : [ 'excel' ],   
+        "ajax" : 'db/allUsers.php',
+        "columns"  : [
+            { 'data' : 'id' },
+            { 'data' : 'name' },
+            { 'data' : 'email' },
+            { 'data' : "verified_flag"},
+            { 'data' : 'last_logged_in' },
+            { 'data' : "reset_link_date"},
+            { 'data' : "active_flag"},
+            {
+				'data' : null,
+				'orderable' : false,
+				'render' : function(data, type, row) { 
+					return '<button onclick="loadPage(\'admin/resetUserPwd.html\', { \'requiresSession\': true, \'id\' : ' + row['id'] + 
+                    ', \'name\' : \'' + row['name'] + '\'})"><i class="fa fa-key" title="Reset password"></i></button>'; 
+				}
+			},
+			{
+				'data' : null,
+				'orderable' : false,
+				'render' : function(data, type, row) { 
+					return '<button onclick="editUser(\'' + row['id'] + '\')"><i class="fa fa-pencil-alt" title="Edit"></i></button>'; 
+				}
+			}
+        ]
+
+    }); 
+}
+
+$(document).ready(function() {
+    requiresSession();
+    loadUsers();
+});
+
+</script>   

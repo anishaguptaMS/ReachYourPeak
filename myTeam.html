@@ -1,0 +1,215 @@
+    <div class="col-xs-12">        
+        <div id="teamInfoDiv">
+            <h2>My team:  <span id="teamName"></span></h2>
+            <p>Teams need to consist of 6-12 team members.   There can be only 1 captain.   </p>
+            <div>
+                <p>Your role: <span id="roleName" style="font-weight: bold"></span></p>
+                <p id="cycleInfo"></p>
+                <p id="locationName"></p>
+                
+                <div class="DataTables">
+                 <table id="teamMemberId" width="100%" class="table table-striped table-bordered" cellspacing="0">
+
+                    <thead>
+                        <tr>
+                        <th>Name</th><th>E-mail</th><th>Role Name</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                
+                 </tbody>
+                 </table>
+                </div>
+
+                
+                <div id="Enroll_members" class="list-group">
+                    <h4>Members can join your team or you can add them here:</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item"><a href="javascript: addTeamMembers() ">Add team members</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div id="enrollDiv" style="display:none">
+            You are not enrolled in a team!
+            <h3>Join a team (Please contact the captain first!)</h3>
+            <div class="form-group">
+                <label for="teamSelect">Join a team</label>
+                <select  class="form-control" name="team_id" model="joinTeam" id="teamSelect">
+                    
+                </select>
+                
+                <button onclick="joinTeam()" class="btn btn-primary">Join this team</button>
+            </div>
+            
+            <p>
+            Or .... 
+            </p>
+            <h3>Start a team (You will be the captain)</h3>
+            <div class="form-group">
+                <label for "teamName">Enter team name</label>
+                <input type="text" name="name" class="form-control" model="startTeam"  form-control" id="teamNameInput" placeholder="Team name" maxlength="50">    
+            </div>
+            <div class="form-group">
+                <label for="locationSelect">Pick a location:</label>
+                <select  class="form-control" name="location_id" model="startTean" id="locationSelect">
+                
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="cycleSelect">Select an event to join</label>
+                <select class="form-control" model="startTeam" id="cycleSelect" name="cycleId">
+                </select>
+                <br>
+                <button onclick="startTeam()" class="btn btn-primary">Create a team</button>
+            </div>            
+        </div>
+        <br>
+        <button class="btn btn-secondary" onclick="loadPage('menu.html', {requiresSession: true })"> Back to menu </button>
+    </div>
+    
+<script>
+
+var $cycles;
+
+var teamId;
+
+function addTeamMembers() {
+    
+    loadPage('addTeamMember.html', {'requiresSession': true, 'TEAM_ID' : teamId });
+}
+
+function myLocations(json) {
+    $('#locationSelect').empty();
+    for(var i=0; i<json.length; i++) {
+        $('#locationSelect').append('<option value="' + json[i]['ID'] + '">'+ json[i]['name'] +'</option>');
+    }
+}
+
+function joinTeam() {
+    var data = getInputValues('joinTeam');
+    $.ajax({
+        'url' : 'db/joinTeam.php',
+        'data' : data,
+        'type' : 'POST',
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            message("You joined the team");
+            loadPage("myTeam.html");            
+        } else {
+            errorMSG(json.error);
+        }
+    });
+}
+
+function showTeamMembers(teamId) {
+    teamMemberTable = $('#teamMemberId').DataTable({
+        'dom' : 'frtip',
+        "ajax" : 'db/getMyTeamMembers.php?TEAM_ID=' + teamId,
+        "columns"  : [
+            { 'data' : 'name' },
+            { 'data' : 'email' },
+            { 'data' : 'role_name' }
+        ]
+    }); 
+
+}
+
+
+function getTeamMembership() {
+    $.ajax({
+        'url' : 'db/getTeamMembership.php',
+        'type' : 'GET',
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK' && json.data && json.data['team_name']) {
+            $('#teamName').text(json.data['team_name']);
+            $('#roleName').text(json.data['role_name']);
+            $('#cycleInfo').text(json.data['cycle_name'] + ' (' + json.data['start_date'] + ' - ' + json.data['end_date'] + ")");
+            $('#locationName').text(json.data['location']);
+            if(json.data['role_name'] != 'Captain') {
+                $('#Enroll_members').hide();
+            }
+            teamId = json.data['team_id'];
+            showTeamMembers(json.data['team_id']);
+        } else {
+            $('#teamInfoDiv').hide();
+            $('#enrollDiv').show();
+        }
+    });
+}
+
+function loadTeams() {
+    $.ajax({
+        'url' : 'db/allTeams.php',
+        'type' : 'GET',
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            var d = objSort(json.data, ['location', 'name']);
+            for(var i=0; i<json.data.length; i++) {
+                var rec = json.data[i];
+                $('#teamSelect').append('<option value="' + rec['id'] + '">' +  rec['location'] + ' -  ' + rec['name'] + '</option>' );
+            }
+        } else {
+            errorMSG(json.error);
+            if(json.error == 'No valid session') {
+                loadPage('login.html');
+            }
+        }
+    });
+}
+
+function startTeam() {
+    var data = getInputValues('startTeam');
+    $.ajax({
+        'url' : 'db/startTeam.php',
+        'data' : data,
+        'type' : 'POST',
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            message(json.message);
+            loadPage("myTeam.html");
+        } else {
+            errorMSG(json.error);
+            if(json.error == 'No valid session') {
+                loadPage('login.html');
+            }
+        }
+    });
+}
+
+function getCycles() {
+    $.ajax({
+        'url' : 'db/getCycles.php',
+        'data' : { 'status' : 'E' },
+        'type' : 'GET',
+        'dataType' : 'json'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            $('#cycleSelect').empty();
+            for(var i=0; i<json.data.length; i++) {
+                var rec = json.data[i];
+                $('#cycleSelect').append('<option value="' + rec['ID'] + '">' + rec['name'] + '</option>');
+            }
+        }
+    });
+}
+
+
+$(document).ready(
+    function() {
+        requiresSession();
+        getLocations(myLocations);
+        getTeamMembership();
+        loadTeams();
+        getCycles();
+    }
+);
+
+</script>    
+    

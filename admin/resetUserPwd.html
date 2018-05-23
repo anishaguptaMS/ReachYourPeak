@@ -1,0 +1,42 @@
+   <div class="col-xs-12">
+        <h3>Reset password for user: </h3>
+        <h4 id="userName"></h4>
+        <input type="hidden" name="id" id="userId" model="pwd">
+		<div class="form-group">
+            <label for="passwordInput">Password:</label>
+			<input type="text" class="form-control" model="pwd"  name="password" autocomplete="off"  id="passwordInput" placeholder="New password">
+        </div>
+        <div class="modal-footer">
+			<button type="button" class="btn btn-primary" onclick="setPassword()">Set password</button>
+        </div>
+
+        
+        <button class="btn btn-secondary" onclick="loadPage('menuAdmin.html', {requiresSession: true })"> Back to menu </button>
+   </div>
+
+<script>
+
+var userId;
+
+function setPassword() {
+    var data = getInputValues('pwd');
+    $.ajax({
+        'url' : 'db/setUserPwd.php',
+        'dataType' : 'json',
+        'type' : 'POST',
+        'data' : data
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            message(json.message);
+            
+        }
+    });
+}
+  
+$(document).ready(function() {
+    requiresSession();
+    $('#userId').val(getCurrentPageData()['id']);
+    $('#userName').text(getCurrentPageData()['name']);
+})
+  
+</script>

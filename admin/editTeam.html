@@ -1,0 +1,129 @@
+	<div class="col-xs-12">        
+        <h4 class="title" id="divHeaderTitle">Edit Team</h4>
+        
+        <div class="body">
+		<form>
+            <input type="hidden" name="action" model="editTeam" id="actionInput">
+            <input type="hidden" name="id" model="editTeam" id="idInput">
+			<div class="form-group">
+				<label for="nameInput">Name:</label>
+				<input type="email" class="form-control" model="editTeam" name="name" id="nameInput" placeholder="Team name">
+			</div>
+            <div class="form-group">
+                <label for="locationSelect">Pick a location:</label>
+                <select  class="form-control" name="location_id" model="editTeam" id="locationSelect">
+                
+                </select>
+            </div>           
+            <div class="form-group">
+                <label for="cycleSelect">Pick a cycle:</label>
+                <select  class="form-control" name="cycle_id" model="editTeam" id="cycleSelect">
+                
+                </select>
+            </div>                       
+            <div class="form-group">
+                <label for="teamStatusSelect">Team status:</label>
+                
+                <select  class="form-control" name="active_flag" model="editTeam" id="teamStatusSelect">
+                    <option value="E">Enroll</option>
+                    <option value="A">Active</option>
+                    <option value="N">Not active</option>
+                </select>
+
+                                       
+            </div>
+      </div>
+      <div class="modal-footer">
+			<button type="button" class="btn btn-primary" onclick="saveEditTeam()">Save</button>
+      </div>
+	  </form>        
+      
+      <div>
+        <button class="btn btn-secondary" onclick="loadPage('menuAdmin.html', {requiresSession: true })"> Back to menu </button>
+      </div>
+
+    </div>
+    
+<script>
+
+var cyclesLoaded = false,
+    locationsLoaded = false;
+
+function pageLoadCompleted() {
+    return (cyclesLoaded && locationsLoaded);
+}
+
+function saveEditTeam() {
+    var data = getInputValues('editTeam');
+    data.action = getCurrentPageData()['action'];
+    $.ajax({
+        'url' : 'db/saveTeam.php',
+        'data' : data,
+        'dataType' : 'json',
+        'type' : 'POST'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            message(json.message);
+            loadPage("admin/teams.html", { 'requiresSession': true });
+        }        
+    });
+}
+
+function myLocations(json) {
+    $('#locationSelect').empty();
+    for(var i=0; i<json.length; i++) {
+        $('#locationSelect').append('<option value="' + json[i]['ID'] + '">'+ json[i]['name'] +'</option>');
+    }
+    locationsLoaded = true;
+}
+
+function getCycles() {
+    $.ajax({
+        'url': 'db/allCycles.php',
+        'dataType' : 'json',
+        'type' : 'GET'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            $('#cycleSelect').append('<option value="">Remove</option>');
+            for(var i=0; i<json.data.length; i++) {
+                var rec = json.data[i];
+                $('#cycleSelect').append('<option value="' + rec['ID'] + '">'+ rec['name'] +'</option>');
+            }
+            cyclesLoaded = true;
+        }
+    });
+}
+
+function loadData() {
+    if(! pageLoadCompleted()) {
+        setTimeout(loadData, 50);
+        return false;
+    }
+    $('#actionInput').val(getCurrentPageData()['action']);
+    if(getCurrentPageData()['action'] == 'new') {
+        $('#divHeaderTitle').text('Add a new team');
+    } else if(getCurrentPageData()['action'] == 'edit') {
+        $('#idInput').val(getCurrentPageData()['id']);
+        $.ajax({
+            'url' : 'db/getCurrentTeamCycle.php',
+            'data' : { 'id' : getCurrentPageData()['id'], 'table' : 'teams' },
+            'dataType' : 'json',
+            'type' : 'GET'
+        }).success(function(json) {
+            setInputValues('editTeam', json.data);
+        });
+    }
+}
+
+$(document).ready(function() {
+    requiresSession();
+    getLocations(myLocations);
+    getCycles();
+    loadData();
+});
+
+
+
+</script>    
+
+    

@@ -1,0 +1,98 @@
+	<div class="col-xs-12">        
+        <h4 class="title" id="divHeaderTitle">Edit Team</h4>
+        
+        <div class="body">
+		<form>
+            <input type="hidden" name="ID" model="editCycle"> 
+			<div class="form-group">
+				<label for="nameInput">Name:</label>
+				<input type="email" class="form-control" model="editCycle" name="name" id="nameInput" placeholder="Cycle name">
+			</div>
+            <div class="form-group">
+                <label for="locationSelect">Year:</label>
+                <select  class="form-control" name="year" model="editCycle" id="yearSelect">
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                </select>
+            </div>           
+            <div class="form-group">
+                <label for="startDateInput">Year:</label>
+                <input type="date" model="editCycle" name="start_date" id="startDateInput">
+
+            </div>                
+            <div class="form-group">
+                <label for="endDateInput">Year:</label>
+                <input type="date" model="editCycle" name="end_date" id="endDateInput">
+
+            </div>                
+            
+            <div class="form-group">
+                <label for="teamStatusSelect">Team status:</label>
+                
+                <select  class="form-control" name="active_flag" model="editCycle" id="teamStatusSelect">
+                    <option value="E">Enroll</option>
+                    <option value="A">Active</option>
+                    <option value="I">Not active</option>
+                </select>
+
+                                       
+            </div>
+      </div>
+      <div class="modal-footer">
+			<button type="button" class="btn btn-primary" onclick="saveEditCycle()">Save</button>
+      </div>
+	  </form>        
+      
+      <div>
+        <button class="btn btn-secondary" onclick="loadPage('menuAdmin.html', { 'requiresSession' : true })"> Back to menu </button>
+      </div>
+
+    </div>
+    
+<script>
+
+var action;
+
+
+function saveEditCycle() {
+    var data = getInputValues('editCycle');
+    data.action = action;
+    $.ajax({
+        'url' : 'db/editCycle.php',
+        'data' : data,
+        'dataType' : 'json',
+        'type' : 'POST'
+    }).success(function(json) {
+        if(json.result == 'OK') {
+            message(json.message);
+            loadPage("admin/cycles.html", { 'requiresSession': true });
+        }        
+    });
+} 
+
+
+$(document).ready(function() {
+    requiresSession();
+    action = getCurrentPageData()['action'];
+    if(action == 'new') {
+        $('#divHeaderTitle').text('Add a new cycle');
+    }  else if(action == 'edit') {
+        $.ajax({
+            'url' : 'db/getById.php',
+            'data' : { 'id' : getCurrentPageData()['id'], 
+                'table' : 'cycles'
+            },
+            'dataType' : 'json',
+            'type' : 'GET'
+        }).success(function(json) {
+            setInputValues('editCycle', json.data);
+        });
+    } 
+});
+
+
+
+</script>    
+
+    

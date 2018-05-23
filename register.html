@@ -1,0 +1,50 @@
+
+
+	<div class="col-xs-12">        
+        <h4 class="title">Register as a new user</h4>
+      </div>
+      <div class="body">
+		<form>
+			<div class="form-group">
+				<label for="emailInput">Enter your email address:</label>
+				<input type="text" class="form-control" model="register" name="email" id="emailInput" placeholder="Email">
+			</div>
+			<div class="form-group">
+				<label for="nameInput">Enter your name:</label>
+				<input type="text" class="form-control" model="register"  name="name" autocomplete="off"  id="nameInput" placeholder="Name">
+			</div>
+            <div class="form-group">
+                <label for="locationSelect">Pick a location:</label>
+                <select  class="form-control" name="location_id" model="register" id="locationSelect">
+                
+                </select>
+            </div>
+		
+      </div>
+      <div class="modal-footer">
+			<button type="button" class="btn btn-primary" onclick="registerSubmit()">Register</button>
+      </div>
+	  </form>        
+      
+      
+      <div>
+        <button class="btn btn-secondary" onclick="loadPage('login.html')">Back to login page</button>
+      </div>
+    </div>
+
+<script>
+
+function myLocations(json) {
+    $('#locationSelect').empty();
+    for(var i=0; i<json.length; i++) {
+        $('#locationSelect').append('<option value="' + json[i]['ID'] + '">'+ json[i]['name'] +'</option>');
+    }
+}
+
+
+
+$(document).ready(function() {
+    getLocations(myLocations);
+});
+
+</script>
