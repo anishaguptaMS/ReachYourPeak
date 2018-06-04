@@ -5,7 +5,7 @@ include_once('db.php');
 function openMySql() {
     $dns = getenv('MYSQL_DSN') ? getenv('MYSQL_DSN') : 'mysql:host=127.0.0.1;dbname=ryp;charset=utf8';
     $user = getenv('MYSQL_USER') ? getenv('MYSQL_USER') : 'root';
-    $pwd = getenv('MYSQL_PASSWORD') ? getenv('MYSQL_PASSWORD') : 'SinaiDW123';
+    $pwd = getenv('MYSQL_PASSWORD') ? getenv('MYSQL_PASSWORD') : 'Password';  // Please change the password
 	$db = new PDO($dns, $user, $pwd);
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
