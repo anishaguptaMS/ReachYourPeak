@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <header>
 
@@ -9,143 +10,146 @@
   src="https://code.jquery.com/jquery-1.12.4.min.js"
   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
   crossorigin="anonymous"></script>
-  
-<script type="text/javascript" charset="utf-8" src="/DataTables/datatables.min.js"></script>  
- <link rel="stylesheet" href="/DataTables/datatables.min.css"> 
 
-<!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> 
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> 
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
-
-
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
-
-<script type="text/javascript" charset="utf-8" src="js/dwAdmin.js?5"></script>
-<link rel="stylesheet" type="text/css" href="css/dw.css"> 
-
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
 <style>
-.jumbotron {
-	padding-left:30px;
-	height: 50px;
-	padding-top:10px;
-	text-size: 16pt;
-	background-color: #00aeef;
-	color: #e0e0e0;
+
+body, html {
+    height: 100%;
+    margin: 0;
 }
 
-.jumbotron {
-	color: white;
-    font-size:14pt;
+.bg {
+    background-image:  url('MainPageImage.jpg');
+
+    /* Full height */
+    height: 100%; 
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
-th { font-size: 10px; }
-td { font-size: 10px; }
-
-.container-fluid {
-    max-width: 800px;
+h1 {
+    color: #D80B8c;
+    font-weight: bold;
+    z-index: 1000;
+    margin-left: auto;
+    margin-right: auto;
+    text-align:center;
+    text-shadow: 2px 2px 4px black, 0 0 25px white, 0 0 5px white;
 }
 
-.myButton {
-    background-color: red;
+button {
+    font-size: 18pt;
+    color: #00aeef;
+    border-radius: 10px;
+    background-color: white;
+    border: 2px solid #00aeef;
+    box-shadow: 2px 5px 10px black;
 }
 
-.DataTables {
-    font-size: 10pt;
+.leftButton {
+    margin-right: 50px;
 }
 
-@media only screen and (max-width: 480px) {
-    .jumbotron {
-        color: white;
-        font-size:10pt;
+.buttonBar {
+    position: relative;  
+    top:75%; 
+    margin: auto; 
+}
+
+.insideButtonBar {
+    margin: auto;
+    width:800px;
+}
+
+.firstLine {
+    position:absolute; 
+    top:20%; 
+    width: 100%;
+}
+
+.secondLine {
+    position: absolute; 
+    top: 30%; 
+    width: 100%;
+    text-align:center;
+
+}
+
+@media only screen and (max-width: 1024px) {
+
+    .buttonBar {
+        width: 80%;
     }
+    
+    .secondLine {
+        top: 30%;
+    }
+
+
+    button {
+        font-size: 12pt;
+    }
+
+
 }
-  
+
+@media only screen and (max-width: 720px) {
+    h1 {
+        font-size: 18pt;
+    }
+    
+    .secondLine {
+        top: 30%;
+    }
+
+
+    button {
+        font-size: 10pt;
+    }
+    
+    .leftButton {
+        margin-right: 10px;
+    }
+    
+    .buttonBar {
+        width: 80%;
+    }
+    
+}
+
+
 </style>
 
 </header>
+
 <body>
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-		<input type="hidden" id="currentModel">
-		<input type="hidden" id="currentID">
-        <button type="button" class="close" data-dismiss="modal" id="closeModalIcon">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
-      </div>
-      <div class="modal-body">
-        
-      </div>
-      <div class="modal-footer">
-		<button type="button" class="btn btn-primary" data-dismiss="modal" id="modalSaveButton" onclick="saveModalModel()">
-		 <i class="fa fa-check"></i> Save</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">
-		 <i class="fa fa-times"></i> Close</button>
-      </div>
-    </div>
+<div class="bg">
 
-  </div>
-</div>
+<h1 class="firstLine">Welcome to the Mount Sinai Health System's</h1><br>
+<h1 class="secondLine">Reach Your Peak</h1>
 
-<nav class="navbar navbar-light bg-faded navbar-static-top" role="navigation">
-	<a class="navbar-brand" href="http://www.mountsinai.org"><img src="/img/logo-color.png" id="logo" title="Mount Sinai"></a>
-    <div class="container">
-    </div>
-</nav>
-
-<div class="jumbotron">Reach Your Peak <i class="fa fa-copyright"></i> 2018 --- <span id="users_name">Not logged in</span>
-</div>
-
-<div class="container-fluid" id="main">
+<div style="position:absolute; top:75%; width:100%;">
+<div class="buttonBar">
+    <div class="insideButtonBar">
+    <button class="leftButton" onclick="loadPage('login')"> Please click here to login </button> <button onclick="loadPage('register')"> Not registered yet?  Please click here </button>
     <div>
-        Checking session ....
-    </div>
+<div>
 </div>
-
-
-</body>
+</div>
 
 <script>
 
-
-
-function checkSessionCallback(hasSession) {
-    if(hasSession) {
-        loadPage('menu.html');
-    } else {
-        loadPage('login.html');
-    }
+function loadPage(page) {
+    document.location.href = "landing.html?page=" + page;
 }
-
-$(document).ready(function() {
-    if(document.location.href.indexOf('http://') >= 0) {
-        var s = document.location.href.replace('http://', 'https://');
-        document.location.href = s;
-    }
-	convertLinks();
-	checkSession(checkSessionCallback);
-});
-
-
 
 </script>
 
-</html>
+</body>

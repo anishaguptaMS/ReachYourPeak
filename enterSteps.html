@@ -19,7 +19,7 @@
         
         <h4><span id="start_date"></span> -  <span id="end_date"></span><h4>
         <hr>
-        <div>
+        <div id="enterStepDetails">
             <h4>Week</h4>
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div id="weeks" class="btn-group mr-2" role="group" aria-label="First group">
@@ -35,7 +35,7 @@
                 <input type="hidden" name="date5" model="steps" id="date5">
                 <input type="hidden" name="date6" model="steps" id="date6">
             
-                <table id="dateStepTable" class="stepTableClass">
+                <table id="dateStepTable" class="stepTableClass table">
                     <tbody>
                     
                     </tbody>
@@ -49,6 +49,11 @@
             
             
             <hr>
+        </div>
+        
+        <div id="enterMessage">
+            Your event has not yet started.  Please wait until after the start date before enterering your steps.
+
         </div>
     
          <div>
@@ -70,6 +75,7 @@ function getWeeks(d) {
         'dataType' : 'json'
     }).success(function(json) {
          if(json.result == 'OK') {
+            $('#enterMessage').css('display', 'none');
             cycle = json.data;
             $('#cycleName').text(cycle['name']);
             $('#start_date').text(cycle['start_date']);
@@ -78,8 +84,14 @@ function getWeeks(d) {
             cycle['ed'] =  getDateMySQL(cycle['end_date']);
             cycle['daysSinceStart'] = Math.floor((new Date() - cycle['sd'])/msInDay);
             cycle['nrWeeks'] = Math.floor(cycle['daysSinceStart'] / 7) + 1;
-            populateWeeks();
-            getSteps();
+            if(cycle['nrWeeks'] <= 0) {
+                $('#enterMessage').css('display', 'block');
+                $('#enterStepDetails').css('display', 'none');
+            
+            } else {
+                populateWeeks();
+                getSteps();
+            }
          }
     });
 
@@ -88,9 +100,11 @@ function getWeeks(d) {
 function populateWeeks(d) {
     var nrWeeks = cycle['nrWeeks'];
     for(var i=0; i<nrWeeks; i++) {
-        $('#weeks').append('<button class="btn btn-primary" onclick="drawStepTable(' + i + ')">' + (i + 1) + '</button>'); 
+        $('#weeks').append('<button class="btn btn-primary" onclick="drawStepTable(' + i + ')" id="weekBtn' + i + '">' + (i + 1) + '</button>'); 
     }
+    $('#weekBtn' + (nrWeeks-1)).click();
 }
+
 
 function drawStepTable(i) {
     if(! stepsLoaded) {
@@ -104,16 +118,15 @@ function drawStepTable(i) {
     for(var i=0; i<7; i++) {
         var newDate = addDays(startDate, i);
         if(newDate < new Date()) {
-            alert(getDateStr(newDate));
             $('#date' + i).val(getDateStr(newDate));
-            $('#dateStepTable').append('<tr><td>' + getDayOfWeek(newDate) + ' - ' + getDateStr(newDate) + '</td><td><input type=number model="steps" name="steps'+i+'" id="steps' + i + '"></td></tr>');
+            $('#dateStepTable').find('tbody').append('<tr><td>' + getDayOfWeek(newDate) + ' - ' + getDateStr(newDate) + '</td><td><input type=number model="steps" name="steps'+i+'" id="steps' + i + '"></td></tr>');
         }
     }
     
     for(var i=0; i<7; i++) {
         var d = $('#date' + i).val();
         for(var j=0; j<steps.length; j++) {
-            if(getDateStr(new Date(steps[j]['step_date'])) == d) {
+            if(steps[j]['sd'] == d) {
                 $('#steps' + i).val(steps[j]['steps']);
             }
         }
@@ -121,7 +134,7 @@ function drawStepTable(i) {
 }
 
 function getSteps() {
-    stepsLoaded = false;
+    stepsLoaded = false;    
     $.ajax({
         'url' : 'db/getSteps.php',
         'data' : { 'sd' : cycle['start_date'] },
@@ -131,12 +144,15 @@ function getSteps() {
         if(json.result == 'OK') {
             steps = json.data;
             stepsLoaded = true;
-
+            for(var i=0; i<steps.length; i++) {
+                steps[i]['sd'] = dateReformat(steps[i]['step_date']);
+            }
         }
     });
 }
 
 function saveSteps() {
+    stepsLoaded = false;    
     var data = getInputValues('steps');
     $.ajax({
         'url' : 'db/saveSteps.php',

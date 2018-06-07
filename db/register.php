@@ -6,7 +6,7 @@ initDB();
 
 try {
     dml($conn, 
-        "insert into " . $dbTables['users'] . " (name, email, verified_flag, location_id) values (:name, :email, 'N', :location_id)", [ 'vals' => $_POST, 'debug' => true ] );
+        "insert into " . $dbTables['users'] . " (name, email, verified_flag, location_id, active_flag) values (:name, :email, 'N', :location_id, 'A')", [ 'vals' => $_POST, 'debug' => true ] );
 } catch(Exception $e) {
     errorMSG($e, []);
     die();
